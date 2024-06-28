@@ -1,6 +1,7 @@
-import { QueryError, QueryResult } from "mysql2";
+import { QueryError, RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
 import DB from "@/app/_lib/DB";
+import bcrypt from "bcrypt";
 
 interface LoginParams {
   id: string;
@@ -11,15 +12,14 @@ export async function POST(request: Request) {
   const req = await request.json();
   console.log(req);
   const { id, password }: LoginParams = req;
-  console.log("qwe");
-  console.log(id, password);
+
   try {
-    const query = "select * from users where username=? and password_hash=?;";
-    const result = await new Promise((resolve, reject) => {
+    const query = "SELECT * FROM users WHERE username=?;";
+    const result = await new Promise<RowDataPacket[]>((resolve, reject) => {
       DB.query(
         query,
-        [id, password],
-        (error: QueryError | null, result: QueryResult) => {
+        [id],
+        (error: QueryError | null, result: RowDataPacket[]) => {
           if (error) {
             reject(error);
           } else {
@@ -29,14 +29,33 @@ export async function POST(request: Request) {
       );
     });
 
-    return NextResponse.json({ result: result }, { status: 200 });
+    if (result.length > 0) {
+      const user = result[0];
+      return NextResponse.json(
+        { message: "Login successful" },
+        { status: 200 }
+      );
+      // const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+      // if (passwordMatch) {
+      //   return NextResponse.json(
+      //     { message: "Login successful" },
+      //     { status: 200 }
+      //   );
+      // } else {
+      //   return NextResponse.json(
+      //     { error: "Invalid credentials" },
+      //     { status: 401 }
+      //   );
+      // }
+    } else {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
-// export function GET() {
-//   return NextResponse.json({
-//     hello: "hello",
-//   });
-// }

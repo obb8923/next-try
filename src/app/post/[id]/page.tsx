@@ -30,6 +30,7 @@ export default function PostId({ params }: PostIdProps) {
     };
     const res = await fetch(`/api/post/${params.id}`, options);
     const result = await res.json();
+    console.log(result);
     setData(result);
   };
 
