@@ -15,7 +15,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html>
-      <body>
+      <body className="min-h-screen flex flex-col justify-between">
         <GNB />
         {children}
         <Footer />
