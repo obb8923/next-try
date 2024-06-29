@@ -12,15 +12,25 @@ export default function Posting() {
   const router = useRouter();
   const { register, handleSubmit } = useForm<formData>();
   const onSubmit: SubmitHandler<formData> = async (formData) => {
+    const sendData = {
+      ...formData,
+      id: id,
+    };
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(sendData),
     };
+
     const res = await fetch("/api/posting", options);
     const data = await res.json();
+    if (data.message === "ok") {
+      router.push(`/`);
+    } else {
+      alert("저장하는 중에 문제가 발생하였습니다.");
+    }
   };
   useEffect(() => {
     const id: string = sessionStorage.getItem("id") ?? "";
