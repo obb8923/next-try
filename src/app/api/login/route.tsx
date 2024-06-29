@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     if (result.length > 0) {
       const user = result[0];
       return NextResponse.json(
-        { message: "Login successful" },
+        { message: "Login successful", user: user },
         { status: 200 }
       );
       // const passwordMatch = await bcrypt.compare(password, user.password_hash);

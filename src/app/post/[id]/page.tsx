@@ -39,9 +39,9 @@ export default function PostId({ params }: PostIdProps) {
   }, []);
 
   return (
-    <div className="flex flex-col gap-3 items-center">
+    <div className="flex flex-col gap-3 items-center my-10">
       <h1 className="bg-white w-50screen">{data[0]?.head || "제목"}</h1>
-      <div className="bg-white min-h-full w-50screen h-96 overflow-ellipsis">
+      <div className="bg-white min-h-full w-50screen h-96 overflow-clip">
         {data[0]?.body || "내용"}
       </div>
     </div>
