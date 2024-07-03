@@ -2,10 +2,10 @@ import { QueryError, QueryResult } from "mysql2";
 import mysql from "mysql2";
 
 const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "Juniverse325!",
-  database: "board",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 connection.connect((err: QueryError | null) => {
